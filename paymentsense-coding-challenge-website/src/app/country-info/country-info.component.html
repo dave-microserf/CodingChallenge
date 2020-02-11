@@ -1,0 +1,14 @@
+<div class="card" *ngIf='info'>
+    <div class="card-header">
+        {{info.name}}
+    </div>
+    <div class="card-body">
+        The capital of {{info.name}} is {{info.capital}} and it has a population of {{info.population}}.
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Currencies<br><span *ngFor='let ccy of info.currencies'>{{ccy}}&nbsp;</span></li>
+        <li class="list-group-item">Languages<br><span *ngFor='let lang of info.languages'>{{lang}}&nbsp;</span></li>
+        <li class="list-group-item">Timezones<br><span *ngFor='let tz of info.timezones'>{{tz}}&nbsp;</span></li>
+        <li class="list-group-item">Borders<br><span *ngFor='let bdr of info.borders'>{{bdr}}&nbsp;</span></li>
+    </ul>
+  </div>

@@ -1,0 +1,21 @@
+<div>    
+<table class="table table-striped" *ngIf='countries && countries.length'>
+    <thead>
+        <tr>
+            <th width="50%">Country</th>
+            <th width="50%">Flag</th>
+        </tr>
+        <tr>
+            <td align="center" colspan="2">
+                <jw-pagination [items]="countries" (changePage)="onChangePage($event)"></jw-pagination>
+            </td>
+        </tr>        
+    </thead>
+    <tbody>
+        <tr *ngFor='let country of pageOfCountries'>
+            <td><a [routerLink]="['/countryinfo', country.name]">{{ country.name }}</a></td>
+            <td><img [src]='country.flag' width='80px'></td>
+        </tr>        
+    </tbody>
+</table>
+</div>
