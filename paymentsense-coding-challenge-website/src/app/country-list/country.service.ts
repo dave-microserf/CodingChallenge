@@ -8,7 +8,7 @@ import { ICountry } from './country';
 })
 export class CountryService {
 
-  private readonly  url: string = "https://localhost:44341/PaymentsenseCodingChallenge/countries";
+  private readonly  url: string = "https://localhost:44341/api/countries";
 
   constructor(private http: HttpClient) { }  
 

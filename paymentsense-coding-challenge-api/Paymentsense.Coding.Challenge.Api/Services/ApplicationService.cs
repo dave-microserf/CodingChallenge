@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,21 +13,21 @@ namespace Paymentsense.Coding.Challenge.Api.Services
         private static readonly Uri RestCountriesAddress = new Uri("https://restcountries.eu/rest/v2/all?fields=name;flag");
         private static readonly Uri RestCountryInfoAddress = new Uri("https://restcountries.eu/rest/v2/name/");
 
-        private readonly Func<Uri, Task<string>> downloadStringTaskAsync;
+        private readonly IWebClient webClient;
 
-        public ApplicationService()
+        public ApplicationService(IWebClient webClient)
         {
-            this.downloadStringTaskAsync = (address) => new WebClient().DownloadStringTaskAsync(address);            
+            if (webClient == null)
+            {
+                throw new ArgumentNullException(nameof(webClient));
+            }
+            
+            this.webClient = webClient;
         }
 
-        internal ApplicationService(Func<Uri, Task<string>> fakeDownloadStringTaskAsync)
-        {
-            this.downloadStringTaskAsync = fakeDownloadStringTaskAsync;
-        }
-        
         public async Task<List<Country>> GetCountriesAsync()
         {
-            var json = await this.downloadStringTaskAsync(RestCountriesAddress);            
+            var json = await this.webClient.DownloadStringTaskAsync(RestCountriesAddress);
             return await JsonSerializer.DeserializeAsync<List<Country>>(new MemoryStream(Encoding.UTF8.GetBytes(json)));
         }
 
@@ -36,7 +35,7 @@ namespace Paymentsense.Coding.Challenge.Api.Services
         {
             var address = new Uri(RestCountryInfoAddress, country);
 
-            var json = await this.downloadStringTaskAsync(address);
+            var json = await this.webClient.DownloadStringTaskAsync(address);
             var document = await JsonDocument.ParseAsync(new MemoryStream(Encoding.UTF8.GetBytes(json)));
             
             // TODO: refactor out to factory?

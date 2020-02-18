@@ -1,4 +1,8 @@
-﻿using Paymentsense.Coding.Challenge.Api.Services;
+﻿using Moq;
+using Paymentsense.Coding.Challenge.Api.Services;
+using System;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Paymentsense.Coding.Challenge.Api.Tests.Services
@@ -9,7 +13,13 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
         public async void GetCountriesAsync_ReturnsExpectedCountries()
         {
             // Arrange
-            var service = new ApplicationService(FakeMethods.GetCountriesDownloadStringTaskAsync);
+            var mock = new Mock<IWebClient>();
+            
+            mock.Setup(x => x.DownloadStringTaskAsync(
+                It.Is<Uri>(uri => uri.ToString() == "https://restcountries.eu/rest/v2/all?fields=name;flag")))
+                .Returns(Task.FromResult(Encoding.UTF8.GetString(Resource.Countries)));
+
+            var service = new ApplicationService(mock.Object);
 
             // Act
             var countries = await service.GetCountriesAsync();
@@ -37,7 +47,13 @@ namespace Paymentsense.Coding.Challenge.Api.Tests.Services
         public async void GetCountryInfoAsync_ReturnsExpectedCountryInfo()
         {
             // Arrange
-            var service = new ApplicationService(FakeMethods.GetCountryInfoDownloadStringTaskAsync);
+            var mock = new Mock<IWebClient>();
+
+            mock.Setup(x => x.DownloadStringTaskAsync(
+                It.Is<Uri>(uri => uri.ToString() == "https://restcountries.eu/rest/v2/name/France")))
+                .Returns(Task.FromResult(Encoding.UTF8.GetString(Resource.France)));
+
+            var service = new ApplicationService(mock.Object);
 
             // Act
             var countryInfo = await service.GetCountryInfoAsync("France");

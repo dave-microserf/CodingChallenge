@@ -32,10 +32,12 @@ namespace Paymentsense.Coding.Challenge.Api
                 });
             });
             services.AddMemoryCache();
+            services.AddTransient<IWebClient, WebClientWrapper>();
             services.AddSingleton<IApplicationService>(
                 (sp) => new CachingApplicationService(
                     sp.GetService<IMemoryCache>(), 
-                    new ApplicationService()));
+                    new ApplicationService(
+                        sp.GetService<IWebClient>())));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

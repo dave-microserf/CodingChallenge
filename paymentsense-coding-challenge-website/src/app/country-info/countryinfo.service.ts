@@ -7,7 +7,7 @@ import { ICountryInfo } from './countryinfo';
   providedIn: 'root'
 })
 export class CountryInfoService {
-  private readonly  url: string = "https://localhost:44341/PaymentsenseCodingChallenge/countryInfo/";
+  private readonly  url: string = "https://localhost:44341/api/countryinfo/";
 
   constructor(private http: HttpClient) { }  
 
